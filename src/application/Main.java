@@ -5,20 +5,27 @@ import java.sql.SQLException;
 import dao.VoitureDAO;
 import entities.Voiture;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-
+import javafx.beans.property.SimpleStringProperty;
 
 public class Main extends Application {
+	  private TableView<Voiture> table;
+	  private ObservableList<Voiture> voitureList;
 	/*
 	@Override
 	public void start(Stage primaryStage) {
@@ -142,6 +149,11 @@ public class Main extends Application {
 	
 	@Override
     public void start(Stage primaryStage) {
+		
+		
+		// private ObservableList<Voiture> voitureList;
+		    
+		    
         // Création des éléments de l'interface
         Label marqueLabel = new Label("Marque:");
         TextField marqueField = new TextField();
@@ -154,6 +166,8 @@ public class Main extends Application {
         
         Button addButton = new Button("Ajouter Voiture");
         Label resultLabel = new Label();
+        
+        Button listVoituresBtn = new Button("Liste Voitures");
 
         // Action du bouton pour ajouter la voiture
         addButton.setOnAction(event -> {
@@ -187,12 +201,56 @@ public class Main extends Application {
             }
         });
 
+        listVoituresBtn.setOnAction(
+        		event -> {
+        			try {
+						System.out.println(VoitureDAO.listVoitures());
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+        		}
+        );
+        try {
+			voitureList = FXCollections.observableArrayList(VoitureDAO.listVoitures());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        table = new TableView<>();
+        table.setItems(voitureList);
+       // Colonnes de la table
+        
+        TableColumn<Voiture, Integer> idColumn = new TableColumn<>("ID");
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        table.getColumns().add(idColumn);
+        
+        
+        TableColumn<Voiture, String> marqueColumn = new TableColumn<>("Marque");
+        marqueColumn.setCellValueFactory(new PropertyValueFactory<>("marque"));
+        table.getColumns().add(marqueColumn);
+        
+        
+        TableColumn<Voiture, String> modeleColumn = new TableColumn<>("Modele");
+        modeleColumn.setCellValueFactory(new PropertyValueFactory<>("modele"));
+        table.getColumns().add(modeleColumn);
+        
+        
+        
+        TableColumn<Voiture, Double> prixColumn = new TableColumn<>("Prix");
+        prixColumn.setCellValueFactory(new PropertyValueFactory<>("prix"));
+        table.getColumns().add(prixColumn);
+        
+        
+        
+        //table.getColumns().addAll(marqueColumn, modeleColumn, prixColumn);
         // Disposition des éléments dans un layout vertical
-        VBox vbox = new VBox(10, marqueLabel, marqueField, modeleLabel, modeleField, prixLabel, prixField, addButton, resultLabel);
+        VBox vbox = new VBox(10, marqueLabel, marqueField, modeleLabel, modeleField, prixLabel, prixField, addButton, resultLabel,listVoituresBtn, table);
         vbox.setStyle("-fx-padding: 20; -fx-alignment: center;");
 
         // Création de la scène et configuration de la fenêtre
-        Scene scene = new Scene(vbox, 300, 300);
+        Scene scene = new Scene(vbox, 240, 500);
         primaryStage.setTitle("Ajouter une Voiture");
         primaryStage.setScene(scene);
         primaryStage.show();

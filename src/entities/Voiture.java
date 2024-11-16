@@ -26,6 +26,15 @@ public class Voiture {
 		this.prix = prix;
 	}
 
+	private int id;
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	private String marque;
 	private String modele;
 	private double prix;
@@ -36,6 +45,13 @@ public class Voiture {
 		this.prix = prix;
 	}
 
+	public Voiture(int id, String marque, String modele, double prix) {
+		this.id = id;
+		this.marque = marque;
+		this.modele = modele;
+		this.prix = prix;
+	}
+	
 	@Override
 	public String toString() {
 		return "Voiture{" + "marque='" + marque + '\'' + ", modele='" + modele + '\'' + ", prix=" + prix + '}';

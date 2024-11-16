@@ -1,5 +1,9 @@
 package application;
 	
+import java.sql.SQLException;
+
+import dao.VoitureDAO;
+import entities.Voiture;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
@@ -163,6 +167,14 @@ public class Main extends Application {
                 // Création de l'objet Voiture avec les valeurs saisies
                 Voiture voiture = new Voiture(marque, modele, prix);
                 
+                try {
+					VoitureDAO.addVoiture(voiture);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+                
+                
                 // Affichage des détails de la voiture ajoutée
                 resultLabel.setText("Voiture ajoutée : " + voiture);
                 /// insertion dans la base de données
@@ -185,7 +197,8 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SQLException {
+		
 		launch(args);
 	}
 }
